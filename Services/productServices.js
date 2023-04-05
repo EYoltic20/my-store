@@ -1,27 +1,32 @@
 const faker = require('faker')
+const boom = require('@hapi/boom')
 
 class ProductServices{
   constructor(){
     this.products =[];
     this.generate();
   }
-  generate(){
+  async generate(){
     for (let i = 0 ; i<50;i++){
       this.products.push({
-        id:i+1,
+        id:faker.datatype.uuid(),
         name:faker.commerce.productName(),
         price:parseInt(faker.commerce.price(),10),
         image:faker.image.imageUrl()
       })
     }
   }
-  all(){
+  async all(){
     return this.products;
   }
-  find(id){
-    return this.products.find(item => item.id === id)
+  async find(id){
+    const product =  this.products.find(item => item.id === id)
+    if(!product){
+      throw boom.notFound('no se encontro el producto');
+    }
+    return product;
   }
-  create(body){
+  async create(body){
     try{
       this.products.push(body)
       return true
@@ -29,10 +34,10 @@ class ProductServices{
       return false
     }
   }
-  update(id,changes){
+  async update(id,changes){
     const index = this.products.findIndex(item=>item.id===id)
     if(id===-1){
-      throw new Error('no se encontro')
+      throw boom.notFound;
   }else{
     this.products[index] = changes
   }

@@ -1,27 +1,35 @@
 const express = require('express')
-const app = express();
-const ProductServices = require('../Services/productServices')
+const ProductServices = require('./../Services/productServices')
+const validetorHandler = require('./../middlewares/validatorHandler');
+const {createSchema,updatePrice,getProductSchema}=require('../schemas/productSchema')
+
 
 const service = new ProductServices();
 const router = express.Router()
 
 // GETS
-router.get('/',(req,res)=>{
-  const products = service.all();
+router.get('/',async (req,res)=>{
+  const products = await service.all();
   res.json(products)
 })
 
 
-router.get('/:id',(req,res)=>{
-  const product = service.find();
-  res.json(product)
+router.get('/:id',validetorHandler(getProductSchema,'params'), async(req,res,next)=>{
+  try{
+    const { id } = req.params
+    const product = await service.find(id);
+    res.json(product)
+  }catch(error){
+    next(error)
+  }
+
 })
 // End points de forma dinamica tiene que ser  despues de los estaticos
 
 // POSTS
 
-router.post('/',(req,res)=>{
-  const response = service.create(req.body);
+router.post('/',async (req,res)=>{
+  const response = await service.create(req.body);
   if (response){
     res.json({
       messages:'created'
@@ -36,14 +44,15 @@ router.post('/',(req,res)=>{
 // MODIFICAR
 
 
-router.patch('/:id',(req,res)=>{
+router.patch('/:id',async (req,res)=>{
+  try{
   const {id} = req.params
   const body = req.body
-  res.json({
-    messages:'update',
-    data:body,
-    id
-  })
+  const product   = await service.update(id,body)
+  res.json(product)
+  }catch(error){
+    res.status(404).json({messages:error.messages})
+  }
 })
 
 
