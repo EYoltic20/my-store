@@ -1,5 +1,4 @@
 function logError(err,req,res,next){
-
   next(err);//mid de tipo de error
 }
 
@@ -9,14 +8,13 @@ function errorHandler(err,req,res,next){
     stack:err.stack
   })
 }
+
 function boomErrorHandler(err,req,res,next){
   if (err.isBoom){
     const { output } =err;
-    res.send(output.statusCode).json(output.payload)
+    res.sendStatus(output.statusCode).json(output.payload)
   }
     next(err);
-
-
-
 }
+
 module.exports = {logError,errorHandler,boomErrorHandler};

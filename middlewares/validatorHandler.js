@@ -5,9 +5,10 @@ function validatorHandler(schema,property){
     const data = req[property];
     const { error } = schema.validate(data,{aboutEarly:false})
     if (error){
-      next(boom.badRequest(error))
+      next(boom.notFound(error))
     }
     next();
   }
 }
+
 module.exports= validatorHandler
