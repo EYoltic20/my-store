@@ -2,7 +2,9 @@ const faker = require('faker')
 const boom = require('@hapi/boom')
 const getConnection = require('../libs/postgres')
 const pool = require('../libs/psotrgrespool');
-const sequelize = require('../libs/sequelize')
+// const sequelize = require('../libs/sequelize')
+
+const {models} = require('../libs/sequelize')
 class ProductServices{
   constructor(){
     // pool
@@ -23,12 +25,14 @@ class ProductServices{
   }
   async all(){
     // pool
-    const query = 'SELECT * FROM tasks';
+    // const query = 'SELECT * FROM tasks';
     // const rtados = await this.pool.query(query)
     // const product = await getConnection();
-    const [data,metadata] = await sequelize.query(query)
+    // const [data,metadata] = await sequelize.query(query)
+
+    const response = await models.Product.findAll()
     // const rta = await product.query('SELECT * FROM tasks')
-    return data;
+    return response;
   }
   async find(id){
     const product =  this.products.find(item => item.id === id)
@@ -38,12 +42,9 @@ class ProductServices{
     return product;
   }
   async create(body){
-    try{
-      this.products.push(body)
-      return true
-    } catch(error){
-      return false
-    }
+    console.log(body)
+    const newProduct = await models.Product.create(body)
+    return true
   }
   async update(id,changes){
     const index = this.products.findIndex(item=>item.id===id)

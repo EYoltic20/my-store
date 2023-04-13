@@ -29,7 +29,10 @@ router.get('/:id',validetorHandler(getProductSchema,'params'), async(req,res,nex
 // POSTS
 
 router.post('/',async (req,res)=>{
-  const response = await service.create(req.body);
+  const body = req.body
+  console.log('BODY');
+  console.log(body)
+  const response = await service.create(body);
   if (response){
     res.json({
       messages:'created'

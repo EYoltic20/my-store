@@ -1,9 +1,48 @@
 const {Model, DataTypes,Sequelize} = require('sequelize');
 
-const product = 'product';
+const PRODUCT_TABLE = 'product';
 
 const ProductSchema ={
   id:{
-    type:DataType.Integer
+    allowNull:false,
+    primaryKey: true,
+    autoIncrement: true,
+    type: DataTypes.INTEGER,
+
+  },
+  name:{
+    allowNull:false,
+    type:DataTypes.STRING
+  },
+  price:{
+    allowNull:false,
+    type:DataTypes.INTEGER
+  },
+  createdAt: {
+    allowNull: true,
+    type: DataTypes.DATE,
+    field: 'create_at',
+    defaultValue:Sequelize.NOW
+  },
+  updatedAt:{
+    allowNull: true,
+    type: DataTypes.DATE
   }
 }
+
+
+class Product extends Model{
+  static associatte(){
+// cuando se asocie
+  }
+  static config(sequelize){
+    return{
+      sequelize,
+      tableName:PRODUCT_TABLE,
+      modelName:'Product',
+      timestamp:false
+    }
+  }
+}
+
+module.exports = {Product,ProductSchema}
