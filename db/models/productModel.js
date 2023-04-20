@@ -18,6 +18,10 @@ const ProductSchema ={
     allowNull:false,
     type:DataTypes.INTEGER
   },
+  categoria:{
+    allowNull:true,
+    type:DataTypes.STRING
+  },
   createdAt: {
     allowNull: true,
     type: DataTypes.DATE,
@@ -45,4 +49,4 @@ class Product extends Model{
   }
 }
 
-module.exports = {Product,ProductSchema}
+module.exports = {Product,ProductSchema,PRODUCT_TABLE}
